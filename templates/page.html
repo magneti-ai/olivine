@@ -9,4 +9,11 @@
   {% endif %}
 </p>
 {% endif %}
+{% if page.authors %}
+<p class="page-meta">By {{ page.authors | join(sep=", ") }}</p>
+{% endif %}
+{% if page.extra.contributors is defined and page.extra.contributors %}
+<p class="page-meta">Contributors: {{ page.extra.contributors | join(sep=", ") }}</p>
+{% endif %}
+{{ super() }}
 {% endblock content %}
