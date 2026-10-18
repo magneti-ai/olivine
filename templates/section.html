@@ -1,1 +1,19 @@
 {% extends "content.html" %}
+
+{% block content %}
+{% if section.extra.date is defined %}
+<p class="page-dates">
+  Published {{ section.extra.date | date(format="%B %-d, %Y") }}
+  {% if section.extra.updated is defined and section.extra.updated != section.extra.date %}
+  · Updated {{ section.extra.updated | date(format="%B %-d, %Y") }}
+  {% endif %}
+</p>
+{% endif %}
+{% if section.extra.authors is defined %}
+<p class="page-meta">By {{ section.extra.authors | join(sep=", ") }}</p>
+{% endif %}
+{% if section.extra.contributors is defined %}
+<p class="page-meta">Contributors: {{ section.extra.contributors | join(sep=", ") }}</p>
+{% endif %}
+{{ super() }}
+{% endblock content %}
