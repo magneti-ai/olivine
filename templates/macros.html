@@ -3,7 +3,9 @@
 {%- if not first %}, {% endif -%}
 "{{ section.path | safe }}" : "{{ section.title | default(value="") | safe }}"
 {%- for subsection in section.subsections -%}
-{{<olivine.sitemap path={subsection} first={false}/>}}
+<nav class="site-tree">
+{{<olivine.tree path="_index.md" current={current_path}/>}}
+</nav>
 {%- endfor -%}
 {%- for page in section.pages -%}
 , "{{ page.path | safe }}" : "{{ page.title | default(value="") | safe }}"
@@ -39,4 +41,24 @@
 {%- set var_subsection = get_section(path=subsection) -%}
 { data: { source: '{{var_subsection.path|safe}}', target: '{{section.path|safe}}' } },
 {% endfor -%}
+{%- endcomponent %}
+
+{% component olivine.tree(path: string, current: string) -%}
+{%- set sec = get_section(path=path) -%}
+{%- for child in sec.subsections | sort -%}
+{%- set sub = get_section(path=child) -%}
+{%- set slug = sub.components | last -%}
+{%- if slug is not starting_with(pat="olivine-internal") -%}
+<li><details{% if current is starting_with(pat=sub.path) %} open{% endif %}>
+<summary><a {% if sub.description %}title="{{ sub.description }}" {% endif %}href="{{ sub.permalink | safe }}"{% if current == sub.path %} class="active"{% endif %}>{{<olivine.icon name="folder"/>}} {{ sub.title | safe }}</a></summary>
+<ul>{{<olivine.tree path={child} current={current}/>}}</ul>
+</details></li>
+{%- endif -%}
+{%- endfor -%}
+{%- for page in sec.pages -%}
+{%- set slug = page.components | last -%}
+{%- if slug is not starting_with(pat="olivine-internal") -%}
+<li><a {% if page.description %}title="{{ page.description }}" {% endif %}href="{{ page.permalink | safe }}"{% if current == page.path %} class="active"{% endif %}>{{<olivine.icon name="file-lines"/>}} {{ page.title | safe }}</a></li>
+{%- endif -%}
+{%- endfor -%}
 {%- endcomponent %}
