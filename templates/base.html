@@ -14,6 +14,7 @@
     {%- block stylesheets %}
     <link href="{{ get_url(path="olivine.css") }}" rel="stylesheet"/>
     {{<olivine.defer_stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>}}
+    <link href="{{ get_url(path="boxes.css") }}" rel="stylesheet"/>
     {%- endblock %}
     {%- include "config.html" %}
     {%- block scripts %}
@@ -23,6 +24,10 @@
     {%- for js in config.extra.olivine.extra_js %}
     <script src="{{ get_url(path=js) }}" {{ js.policy | default(value="") }}></script>
     {%- endfor %}
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+    </script>
     {%- endblock %}
   </head>
 

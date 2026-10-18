@@ -1,1 +1,12 @@
 {% extends "content.html" %}
+
+{% block content %}
+{% if page.date %}
+<p class="page-dates">
+  Published <time datetime="{{ page.date }}">{{ page.date | date(format="%B %-d, %Y") }}</time>
+  {% if page.updated and page.updated != page.date %}
+  · Updated <time datetime="{{ page.updated }}">{{ page.updated | date(format="%B %-d, %Y") }}</time>
+  {% endif %}
+</p>
+{% endif %}
+{% endblock content %}
