@@ -28,6 +28,67 @@
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
       mermaid.initialize({ startOnLoad: true, theme: "neutral" });
     </script>
+    <script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" /* ...your themeVariables... */ });
+</script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // The class of the line-number elements (from the inspector earlier).
+    // For table-style line numbers, use "td:first-child" instead.
+    var LINE_NUMBERS = ".giallo-ln";
+
+    document.querySelectorAll("pre").forEach(function (pre) {
+      if (pre.classList.contains("mermaid")) return;   // skip diagrams
+
+      // Wrap the block so the button stays put when the code scrolls sideways.
+      var wrap = document.createElement("div");
+      wrap.className = "code-wrap";
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      wrap.appendChild(btn);
+
+      btn.addEventListener("click", function () {
+        var clone = pre.cloneNode(true);
+        clone.querySelectorAll(LINE_NUMBERS).forEach(function (n) { n.remove(); });
+        var text = clone.textContent.replace(/\n$/, "");
+
+        copy(text).then(function () {
+          btn.textContent = "Copied!";
+          btn.classList.add("copied");
+          setTimeout(function () {
+            btn.textContent = "Copy";
+            btn.classList.remove("copied");
+          }, 1500);
+        });
+      });
+    });
+
+    function copy(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      // Fallback for older browsers / non-HTTPS
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      return Promise.resolve();
+    }
+  });
+  </script>
+
     {%- endblock %}
   </head>
 
